@@ -1,0 +1,45 @@
+# =====================================================================
+# gamerack .gitignore
+# 公開リポジトリ（GitHub Pages 等）に含めたくないファイル / フォルダ
+# =====================================================================
+
+# --- Claude Code / oh-my-claudecode のローカル状態 ---
+# settings.local.json はローカル許可設定（個人環境のパス・プロジェクトIDが含まれる）
+# .omc/state/ は会話ログ・エージェントチェックポイントなど機微度の高い実行状態
+.claude/
+.omc/
+**/.omc/
+
+# --- デザイン参考のアーカイブ（外部素材・別エージェント状態を含むため非公開） ---
+_design/
+
+# --- arcade/ を公開したくない場合は次行のコメントを外す ---
+# arcade/
+
+# --- 一般的な機微情報 ---
+.env
+.env.*
+*.pem
+*.key
+
+# --- ログ / 一時ファイル ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- OS / エディタの自動生成物 ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Node 系（将来 build を入れた時用に予防的に） ---
+node_modules/
+dist/
+build/
+.cache/
