@@ -77,6 +77,22 @@ function compressImage(file, maxSize = 1024, quality = 0.85) {
 }
 window.compressImage = compressImage;
 
+// プラットフォーム別の背表紙CSS変数。
+// --spine-color        : スパイン本体の背景色
+// --spine-cap-bg       : 上部キャップの背景色
+// --spine-foot-bg      : 下部フッターの背景色
+// --spine-title-color  : タイトルテキスト色
+// --spine-plat-bg      : プラットフォームバッジ背景色
+// --spine-plat-color   : プラットフォームバッジ文字色
+const PLATFORM_SPINE_VARS = {
+  'PS5':    { '--spine-color': '#0a0a0a', '--spine-cap-bg': '#003087', '--spine-foot-bg': '#003087', '--spine-title-color': '#ffffff', '--spine-plat-bg': '#003087', '--spine-plat-color': '#ffffff' },
+  'PS4':    { '--spine-color': '#1a1a2e', '--spine-cap-bg': '#003087', '--spine-foot-bg': '#1a1a2e', '--spine-title-color': '#a8c8ff', '--spine-plat-bg': '#003087', '--spine-plat-color': '#ffffff' },
+  'Switch': { '--spine-color': '#e60012', '--spine-cap-bg': '#111111', '--spine-foot-bg': '#111111', '--spine-title-color': '#ffffff', '--spine-plat-bg': '#111111', '--spine-plat-color': '#ffdd00' },
+  'Xbox':   { '--spine-color': '#000000', '--spine-cap-bg': '#107c10', '--spine-foot-bg': '#000000', '--spine-title-color': '#ffffff', '--spine-plat-bg': '#107c10', '--spine-plat-color': '#ffffff' },
+  'PC':     { '--spine-color': '#1b2838', '--spine-cap-bg': '#2a475e', '--spine-foot-bg': '#2a475e', '--spine-title-color': '#c7d5e0', '--spine-plat-bg': '#2a475e', '--spine-plat-color': '#c7d5e0' },
+  'Mobile': { '--spine-color': '#f0f4f9', '--spine-cap-bg': '#4285f4', '--spine-foot-bg': '#4285f4', '--spine-title-color': '#1a1a1a', '--spine-plat-bg': '#4285f4', '--spine-plat-color': '#ffffff' },
+};
+
 // 評価の星表示（n=点灯数, max=満点）
 function Stars({ n, max = 5 }) {
   return (
@@ -127,7 +143,9 @@ function ConfirmDialog({ open, title, message, target, confirmLabel, cancelLabel
 // draggable と drag 系ハンドラ、className は Shelf 側から並び替えのために注入される
 function Spine({ game, onClick, lang, draggable, onDragStart, onDragOver, onDragLeave, onDragEnd, onDrop, className }) {
   const title = lang === 'en' ? game.title_en : game.title;
-  const style = { '--spine-color': game.color };
+  // プラットフォーム変数を優先し、game.color はプラットフォーム未定義時のフォールバック
+  const platVars = PLATFORM_SPINE_VARS[game.platform] || {};
+  const style = { '--spine-color': game.color, ...platVars };
   if (game.image) style['--spine-image'] = `url(${game.image})`;
   return (
     <div

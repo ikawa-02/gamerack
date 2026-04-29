@@ -19,6 +19,11 @@
   --red: #e63946;
   --purple: #7b5cff;
 
+  --glow-magenta: rgba(255, 61, 165, 0);
+  --glow-cyan: rgba(0, 217, 255, 0);
+  --title-shadow: 3px 3px 0 var(--magenta);
+  --dot-color: rgba(26, 21, 48, 0.045);
+
   --shelf-grain: repeating-linear-gradient(
     90deg,
     #6b3a1a 0,
@@ -46,6 +51,10 @@
   --ink-soft: #b8a8d8;
   --paper: #2a1f3d;
   --crt-line: rgba(255, 255, 255, 0.04);
+  --glow-magenta: rgba(255, 61, 165, 0.55);
+  --glow-cyan: rgba(0, 217, 255, 0.55);
+  --title-shadow: 0 0 18px var(--cyan), 3px 3px 0 rgba(0, 217, 255, 0.25);
+  --dot-color: rgba(240, 232, 255, 0.03);
   --shelf-grain: repeating-linear-gradient(
     90deg,
     #3d2a4f 0,
@@ -127,6 +136,9 @@ h1, h2, h3, .pixel-font {
   max-width: 1400px;
   margin: 0 auto;
   padding: 24px 28px 80px;
+  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+  background-size: 22px 22px;
+  min-height: 100vh;
 }
 
 /* === Header === */
@@ -157,31 +169,84 @@ h1, h2, h3, .pixel-font {
 .brand-pixel {
   width: 56px;
   height: 56px;
-  background:
-    linear-gradient(var(--magenta), var(--magenta)) 0 0/14px 14px no-repeat,
-    linear-gradient(var(--cyan), var(--cyan)) 14px 0/14px 14px no-repeat,
-    linear-gradient(var(--yellow), var(--yellow)) 28px 0/14px 14px no-repeat,
-    linear-gradient(var(--green), var(--green)) 42px 0/14px 14px no-repeat,
-    linear-gradient(var(--cyan), var(--cyan)) 0 14px/14px 14px no-repeat,
-    linear-gradient(var(--ink), var(--ink)) 14px 14px/14px 14px no-repeat,
-    linear-gradient(var(--ink), var(--ink)) 28px 14px/14px 14px no-repeat,
-    linear-gradient(var(--magenta), var(--magenta)) 42px 14px/14px 14px no-repeat,
-    linear-gradient(var(--yellow), var(--yellow)) 0 28px/14px 14px no-repeat,
-    linear-gradient(var(--ink), var(--ink)) 14px 28px/14px 14px no-repeat,
-    linear-gradient(var(--ink), var(--ink)) 28px 28px/14px 14px no-repeat,
-    linear-gradient(var(--green), var(--green)) 42px 28px/14px 14px no-repeat,
-    linear-gradient(var(--green), var(--green)) 0 42px/14px 14px no-repeat,
-    linear-gradient(var(--yellow), var(--yellow)) 14px 42px/14px 14px no-repeat,
-    linear-gradient(var(--magenta), var(--magenta)) 28px 42px/14px 14px no-repeat,
-    linear-gradient(var(--cyan), var(--cyan)) 42px 42px/14px 14px no-repeat,
-    var(--bg-2);
+  background: var(--paper);
   border: 3px solid var(--ink);
   box-shadow: 4px 4px 0 var(--ink);
+  position: relative;
+  flex-shrink: 0;
+}
+/* コントローラーのドット絵（16列×10行 / 各3px = 48×30px）
+   P=ラベンダー紫 / W=白（十字キー・ボタン） */
+.brand-pixel::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 1px;
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  box-shadow:
+    /* Row 0 (y=0) 左右の肩グリップ */
+    12px  0   0 0 var(--purple), 15px  0   0 0 var(--purple), 18px  0   0 0 var(--purple),
+    27px  0   0 0 var(--purple), 30px  0   0 0 var(--purple), 33px  0   0 0 var(--purple),
+    /* Row 1 (y=3) 上部本体 */
+     6px  3px 0 0 var(--purple),  9px  3px 0 0 var(--purple), 12px  3px 0 0 var(--purple),
+    15px  3px 0 0 var(--purple), 18px  3px 0 0 var(--purple), 21px  3px 0 0 var(--purple),
+    24px  3px 0 0 var(--purple), 27px  3px 0 0 var(--purple), 30px  3px 0 0 var(--purple),
+    33px  3px 0 0 var(--purple), 36px  3px 0 0 var(--purple), 39px  3px 0 0 var(--purple),
+    /* Row 2 (y=6) 本体上部 */
+     3px  6px 0 0 var(--purple),  6px  6px 0 0 var(--purple),  9px  6px 0 0 var(--purple),
+    12px  6px 0 0 var(--purple), 15px  6px 0 0 var(--purple), 18px  6px 0 0 var(--purple),
+    21px  6px 0 0 var(--purple), 24px  6px 0 0 var(--purple), 27px  6px 0 0 var(--purple),
+    30px  6px 0 0 var(--purple), 33px  6px 0 0 var(--purple), 36px  6px 0 0 var(--purple),
+    39px  6px 0 0 var(--purple), 42px  6px 0 0 var(--purple),
+    /* Row 3 (y=9) 十字キー縦上 + ボタン上段 */
+     0    9px 0 0 var(--purple),  3px  9px 0 0 var(--purple),  6px  9px 0 0 var(--purple),
+     9px  9px 0 0 var(--purple), 12px  9px 0 0 #ffffff,
+    18px  9px 0 0 var(--purple), 21px  9px 0 0 var(--purple), 24px  9px 0 0 var(--purple),
+    27px  9px 0 0 var(--purple),
+    33px  9px 0 0 #ffffff,        39px  9px 0 0 #ffffff,
+    42px  9px 0 0 var(--purple), 45px  9px 0 0 var(--purple),
+    /* Row 4 (y=12) 十字キー横 + ボタン中段 */
+     0   12px 0 0 var(--purple),  3px 12px 0 0 var(--purple),  6px 12px 0 0 var(--purple),
+     9px 12px 0 0 #ffffff,       12px 12px 0 0 #ffffff,       15px 12px 0 0 #ffffff,
+    18px 12px 0 0 var(--purple), 21px 12px 0 0 var(--purple), 24px 12px 0 0 var(--purple),
+    27px 12px 0 0 var(--purple),
+    30px 12px 0 0 #ffffff,       33px 12px 0 0 #ffffff,       36px 12px 0 0 #ffffff,
+    39px 12px 0 0 #ffffff,
+    42px 12px 0 0 var(--purple), 45px 12px 0 0 var(--purple),
+    /* Row 5 (y=15) 十字キー縦下 + ボタン下段（Row3と対称） */
+     0   15px 0 0 var(--purple),  3px 15px 0 0 var(--purple),  6px 15px 0 0 var(--purple),
+     9px 15px 0 0 var(--purple), 12px 15px 0 0 #ffffff,
+    18px 15px 0 0 var(--purple), 21px 15px 0 0 var(--purple), 24px 15px 0 0 var(--purple),
+    27px 15px 0 0 var(--purple),
+    33px 15px 0 0 #ffffff,        39px 15px 0 0 #ffffff,
+    42px 15px 0 0 var(--purple), 45px 15px 0 0 var(--purple),
+    /* Row 6 (y=18) 本体下部（全幅） */
+     0   18px 0 0 var(--purple),  3px 18px 0 0 var(--purple),  6px 18px 0 0 var(--purple),
+     9px 18px 0 0 var(--purple), 12px 18px 0 0 var(--purple), 15px 18px 0 0 var(--purple),
+    18px 18px 0 0 var(--purple), 21px 18px 0 0 var(--purple), 24px 18px 0 0 var(--purple),
+    27px 18px 0 0 var(--purple), 30px 18px 0 0 var(--purple), 33px 18px 0 0 var(--purple),
+    36px 18px 0 0 var(--purple), 39px 18px 0 0 var(--purple), 42px 18px 0 0 var(--purple),
+    45px 18px 0 0 var(--purple),
+    /* Row 7 (y=21) 本体下部（両端なし） */
+     3px 21px 0 0 var(--purple),  6px 21px 0 0 var(--purple),  9px 21px 0 0 var(--purple),
+    12px 21px 0 0 var(--purple), 15px 21px 0 0 var(--purple), 18px 21px 0 0 var(--purple),
+    21px 21px 0 0 var(--purple), 24px 21px 0 0 var(--purple), 27px 21px 0 0 var(--purple),
+    30px 21px 0 0 var(--purple), 33px 21px 0 0 var(--purple), 36px 21px 0 0 var(--purple),
+    39px 21px 0 0 var(--purple), 42px 21px 0 0 var(--purple),
+    /* Row 8 (y=24) 左右グリップのみ */
+     3px 24px 0 0 var(--purple),  6px 24px 0 0 var(--purple),  9px 24px 0 0 var(--purple),
+    36px 24px 0 0 var(--purple), 39px 24px 0 0 var(--purple), 42px 24px 0 0 var(--purple),
+    /* Row 9 (y=27) 左右グリップ下端 */
+     6px 27px 0 0 var(--purple),  9px 27px 0 0 var(--purple),
+    36px 27px 0 0 var(--purple), 39px 27px 0 0 var(--purple);
 }
 .brand-text h1 {
   font-size: 22px;
   margin: 0 0 6px;
   color: var(--ink);
+  text-shadow: var(--title-shadow);
 }
 .brand-text .blink {
   display: inline-block;
@@ -220,7 +285,7 @@ h1, h2, h3, .pixel-font {
 
 /* === Pixel buttons === */
 .pixel-btn {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'Press Start 2P', 'DotGothic16', monospace;
   font-size: 11px;
   padding: 12px 16px;
   background: var(--paper);
@@ -232,6 +297,17 @@ h1, h2, h3, .pixel-font {
   transition: transform 80ms steps(2), box-shadow 80ms steps(2);
   text-transform: uppercase;
   user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ヘッダーの追加ボタンは言語切替でサイズが変わらないよう固定幅にする */
+.header-actions .pixel-btn.primary {
+  min-width: 148px;
 }
 .pixel-btn:hover {
   transform: translate(2px, 2px);
@@ -244,6 +320,11 @@ h1, h2, h3, .pixel-font {
 .pixel-btn.primary {
   background: var(--magenta);
   color: white;
+  box-shadow: 4px 4px 0 var(--ink), 0 0 0 0 var(--glow-magenta);
+  transition: transform 80ms steps(2), box-shadow 80ms steps(2);
+}
+.pixel-btn.primary:hover {
+  box-shadow: 2px 2px 0 var(--ink), 0 0 16px var(--glow-magenta);
 }
 .pixel-btn.cyan { background: var(--cyan); }
 .pixel-btn.yellow { background: var(--yellow); }
@@ -255,7 +336,7 @@ h1, h2, h3, .pixel-font {
   background: transparent;
   box-shadow: 2px 2px 0 var(--ink);
 }
-.pixel-btn.small { padding: 8px 10px; font-size: 9px; }
+.pixel-btn.small { padding: 8px 10px; font-size: 9px; min-height: 34px; }
 
 /* Lang switch */
 .lang-switch {
@@ -288,10 +369,28 @@ h1, h2, h3, .pixel-font {
   background: var(--paper);
   border: 3px solid var(--ink);
   box-shadow: 4px 4px 0 var(--ink);
-  padding: 10px 14px;
+  padding: 10px 14px 10px 22px;
   position: relative;
   overflow: hidden;
+  transition: background 120ms steps(3), color 120ms steps(3);
+  cursor: default;
 }
+.stat:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.stat:hover .label { color: var(--paper); opacity: 0.6; }
+.stat:hover .value { color: var(--paper); text-shadow: none; }
+.stat::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 10px;
+  background: var(--magenta);
+}
+.stat.cleared::before { background: var(--green); }
+.stat.playing::before { background: var(--yellow); }
+.stat.backlog::before { background: var(--ink-soft); }
 .stat .label {
   font-family: 'Press Start 2P', monospace;
   font-size: 8px;
@@ -301,7 +400,7 @@ h1, h2, h3, .pixel-font {
 }
 .stat .value {
   font-family: 'Press Start 2P', monospace;
-  font-size: 22px;
+  font-size: 24px;
   margin-top: 6px;
   color: var(--ink);
 }
@@ -316,12 +415,14 @@ h1, h2, h3, .pixel-font {
   margin-top: 8px;
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.12);
 }
 .stat .bar > span {
   position: absolute;
   inset: 0;
   background: var(--magenta);
   width: var(--w, 60%);
+  transition: width 600ms steps(12);
 }
 .stat.cleared .value { color: var(--green); text-shadow: 2px 2px 0 var(--ink); }
 .stat.playing .value { color: var(--yellow); text-shadow: 2px 2px 0 var(--ink); }
@@ -378,13 +479,25 @@ h1, h2, h3, .pixel-font {
   align-items: center;
   gap: 8px;
   background: var(--yellow);
-  padding: 6px 10px;
+  padding: 7px 14px 7px 10px;
   border: 3px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
   text-transform: uppercase;
+  letter-spacing: 0.06em;
+  position: relative;
 }
 /* Dark テーマでは棚ラベルの背景（黄色）が明るいままなので、文字色は固定の濃色にする */
 [data-theme="dark"] .shelf-label { color: #1a1530; }
+
+/* ダークモードではスパインホバーにネオングロー */
+[data-theme="dark"] .spine:hover {
+  box-shadow:
+    inset -3px 0 0 rgba(0,0,0,0.25),
+    inset 3px 0 0 rgba(255,255,255,0.18),
+    2px 2px 0 var(--ink),
+    0 12px 32px rgba(0,0,0,0.5),
+    0 0 22px var(--spine-color, var(--magenta));
+}
 
 .shelf {
   position: relative;
@@ -406,11 +519,11 @@ h1, h2, h3, .pixel-font {
 }
 
 .shelf .plank {
-  height: 22px;
+  height: 24px;
   background: var(--shelf-grain);
   border-top: 3px solid var(--wood-dark);
   border-bottom: 3px solid var(--wood-dark);
-  box-shadow: 0 6px 0 rgba(0,0,0,0.25);
+  box-shadow: 0 8px 0 rgba(0,0,0,0.35), 0 10px 12px rgba(0,0,0,0.2);
   margin: 0 -18px;
   position: relative;
   z-index: 0;
@@ -455,20 +568,26 @@ h1, h2, h3, .pixel-font {
   user-select: none;
 }
 .spine:hover {
-  transform: translateY(-12px);
-  filter: brightness(1.1);
+  transform: translateY(-18px) scale(1.04);
+  filter: brightness(1.15);
   z-index: 5;
+  box-shadow:
+    inset -3px 0 0 rgba(0,0,0,0.25),
+    inset 3px 0 0 rgba(255,255,255,0.18),
+    2px 2px 0 var(--ink),
+    0 12px 32px rgba(0,0,0,0.22),
+    0 0 0 2px var(--spine-color, var(--magenta));
 }
 .spine .spine-cap {
   width: 100%;
   height: 14px;
-  background: rgba(0,0,0,0.25);
+  background: var(--spine-cap-bg, rgba(0,0,0,0.25));
   border-bottom: 2px solid var(--ink);
 }
 .spine .spine-foot {
   width: 100%;
   height: 10px;
-  background: rgba(0,0,0,0.35);
+  background: var(--spine-foot-bg, rgba(0,0,0,0.35));
   border-top: 2px solid var(--ink);
 }
 .spine .spine-title {
@@ -481,7 +600,7 @@ h1, h2, h3, .pixel-font {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
-  color: white;
+  color: var(--spine-title-color, white);
   text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
   flex: 1;
   display: flex;
@@ -492,8 +611,8 @@ h1, h2, h3, .pixel-font {
 .spine .spine-platform {
   font-family: 'Press Start 2P', monospace;
   font-size: 6px;
-  color: rgba(255,255,255,0.85);
-  background: rgba(0,0,0,0.4);
+  color: var(--spine-plat-color, rgba(255,255,255,0.85));
+  background: var(--spine-plat-bg, rgba(0,0,0,0.4));
   padding: 2px 0;
   width: 100%;
   text-align: center;
@@ -699,7 +818,7 @@ h1, h2, h3, .pixel-font {
   display: flex;
   flex-direction: column;
 }
-.grid-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+.grid-card:hover { transform: translate(-3px, -3px); box-shadow: 7px 7px 0 var(--ink), 0 8px 24px rgba(0,0,0,0.15); }
 .grid-card .case-art {
   aspect-ratio: 3 / 4;
   background: var(--card-color, var(--magenta));
@@ -761,7 +880,7 @@ h1, h2, h3, .pixel-font {
 }
 .side-panel .panel-head h2 {
   font-size: 13px; margin: 0;
-  text-shadow: 2px 2px 0 var(--ink);
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.45);
 }
 .side-panel .panel-body {
   padding: 18px 20px 90px;
@@ -894,7 +1013,7 @@ h1, h2, h3, .pixel-font {
   font-family: 'Press Start 2P', monospace;
   font-size: 11px;
   padding: 10px 14px;
-  text-shadow: 2px 2px 0 var(--ink);
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.45);
   letter-spacing: 0.1em;
 }
 .confirm-card .body {
@@ -949,7 +1068,7 @@ h1, h2, h3, .pixel-font {
 .view-banner-text b {
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
-  text-shadow: 2px 2px 0 var(--ink);
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.45);
   letter-spacing: 0.06em;
 }
 .view-banner-text span {
