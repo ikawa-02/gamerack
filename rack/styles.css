@@ -933,6 +933,7 @@ h1, h2, h3, .pixel-font {
   color: var(--ink-soft);
 }
 .upload:hover { background: var(--bg-2); }
+.upload.drag-over { background: var(--bg-2); border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan); }
 .upload.has-image { padding: 0; border-style: solid; }
 .upload img {
   max-width: 100%;

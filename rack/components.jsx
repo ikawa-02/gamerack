@@ -313,6 +313,7 @@ function FormPanel({ open, onClose, onSave, editing, lang }) {
   const empty = { title: '', title_en: '', genre: 'rpg', platform: 'PS5', released: '', playtime: 0, status: 'playing', rating: 3, color: '#ff3da5', image: null, spineStyle: 'stripe' };
   const [data, setData] = useState(empty);
   const [confirmDel, setConfirmDel] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
   const fileRef = useRef(null);
 
   // 編集モードに入った時はそのゲームの値を、新規時は空に
@@ -321,21 +322,33 @@ function FormPanel({ open, onClose, onSave, editing, lang }) {
     else setData(empty);
   }, [editing, open]);
 
-  // 画像ファイル選択時に圧縮（最大1024px・JPEG q0.85）してから DataURL を保持
-  const onFile = async (e) => {
-    const f = e.target.files && e.target.files[0];
-    if (!f) return;
+  // 画像ファイルを圧縮して DataURL に変換する共通処理
+  const processImageFile = async (f) => {
+    if (!f || !f.type.startsWith('image/')) return;
     try {
       const dataUrl = await compressImage(f, 1024, 0.85);
       setData((d) => ({ ...d, image: dataUrl }));
     } catch (err) {
       console.error('image compression failed', err);
-      // 圧縮失敗時はフォールバックで原本を読み込む
       const reader = new FileReader();
       reader.onload = (ev) => setData((d) => ({ ...d, image: ev.target.result }));
       reader.readAsDataURL(f);
     }
+  };
+
+  // 画像ファイル選択時に圧縮（最大1024px・JPEG q0.85）してから DataURL を保持
+  const onFile = async (e) => {
+    const f = e.target.files && e.target.files[0];
+    await processImageFile(f);
     e.target.value = '';
+  };
+
+  // ドラッグ＆ドロップで画像をセット
+  const onDrop = async (e) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    await processImageFile(f);
   };
 
   // アップロード画像のみ削除（確認ダイアログ後）
@@ -367,7 +380,13 @@ function FormPanel({ open, onClose, onSave, editing, lang }) {
         <div className="panel-body">
           <div className="field">
             <label>{t(lang, 'fImage')}</label>
-            <div className={`upload ${data.image ? 'has-image' : ''}`} onClick={() => fileRef.current && fileRef.current.click()}>
+            <div
+              className={`upload ${data.image ? 'has-image' : ''} ${isDragOver ? 'drag-over' : ''}`}
+              onClick={() => fileRef.current && fileRef.current.click()}
+              onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+              onDragLeave={() => setIsDragOver(false)}
+              onDrop={onDrop}
+            >
               {data.image
                 ? <img src={data.image} alt="" />
                 : <>
