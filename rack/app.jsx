@@ -69,6 +69,7 @@ function App() {
   const [confirmImportViewed, setConfirmImportViewed] = useState(false); // 閲覧中ラックを取り込む確認
   const [dragId, setDragId] = useState(null); // ドラッグ中のゲームID（棚跨ぎ判定にも使う）
   const importFileRef = useRef(null);
+  const rackRef = useRef(null);
 
   const lang = tweaks.lang || 'ja';
 
@@ -283,6 +284,29 @@ function App() {
     }
   };
 
+  // ラック表示領域をスクリーンショットして PNG としてダウンロードする
+  const onScreenshot = async () => {
+    if (!rackRef.current || !window.html2canvas) return;
+    try {
+      const bg = tweaks.theme === 'dark' ? '#0f0a1f' : '#efe6d2';
+      const canvas = await window.html2canvas(rackRef.current, {
+        backgroundColor: bg,
+        scale: 2,
+        useCORS: true,
+        logging: false
+      });
+      const url = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `gamerack-${new Date().toISOString().slice(0, 10)}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error('screenshot failed', err);
+    }
+  };
+
   // 閲覧モードを抜ける。hash を消してリロードし、自分のラック表示へ戻す
   const exitViewMode = () => {
     try {
@@ -331,6 +355,7 @@ function App() {
           </div>
         </div>
       )}
+      <div ref={rackRef}>
       <header className="header">
         <div className="brand-mark">
           <div className="brand-pixel" aria-hidden="true"></div>
@@ -430,6 +455,7 @@ function App() {
           )}
         </section>
       )}
+      </div>
 
       <window.FormPanel open={panelOpen} onClose={() => setPanelOpen(false)} onSave={onSave} editing={editing} lang={lang} />
 
@@ -549,6 +575,7 @@ function App() {
         {!viewMode && (
           <window.TweakSection title={window.t(lang, 'shareSection')}>
             <TweakAction label={window.t(lang, 'shareBtn')} onClick={onShare} />
+            <TweakAction label={window.t(lang, 'screenshotBtn')} onClick={onScreenshot} />
           </window.TweakSection>
         )}
       </window.TweaksPanel>
